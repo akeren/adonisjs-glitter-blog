@@ -1,16 +1,14 @@
 'use strict'
 
+const Post = use('App/Models/Post')
+
 class PostController {
   async index({ request, view, response }) {
-    const posts = [
-      { title: 'Post One', body: 'lorem 1' },
-      { title: 'Post Two', body: 'lorem 2' },
-      { title: 'Post Three', body: 'lorem 3' },
-    ]
+    const posts = await Post.all();
 
     return view.render('posts.index', {
       title: 'Latest Posts',
-      posts,
+      posts: posts.toJSON()
     })
   }
 }
