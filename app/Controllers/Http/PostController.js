@@ -11,6 +11,12 @@ class PostController {
       posts: posts.toJSON()
     })
   }
+
+  async show({ request, view, response, params }) {
+    const post = await Post.findBy('slug', params.slug)
+
+    return view.render('posts.details', {post})
+  }
 }
 
 module.exports = PostController
