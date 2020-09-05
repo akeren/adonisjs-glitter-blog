@@ -2,6 +2,9 @@
 
 const Post = use('App/Models/Post')
 
+/*
+ ** Get all posts
+ */
 class PostController {
   async index({ view }) {
     const posts = await Post.all()
@@ -12,6 +15,9 @@ class PostController {
     })
   }
 
+  /*
+   ** Get an individual post
+   */
   async show({ params, view }) {
     const { slug } = params
     const post = await Post.findBy('slug', slug)
@@ -19,10 +25,16 @@ class PostController {
     return view.render('posts.details', { post })
   }
 
+  /*
+   ** Render the create post view
+   */
   async create({ view }) {
     return view.render('posts.create')
   }
 
+  /*
+   ** Store post
+   */
   async store({ request, response, session }) {
     const post = new Post()
 
@@ -39,6 +51,9 @@ class PostController {
     return response.redirect('/posts')
   }
 
+  /*
+   ** Render the update view
+   */
   async edit({ params, view }) {
     const { slug } = params
     const post = await Post.findBy('slug', params.slug)
@@ -46,6 +61,9 @@ class PostController {
     return view.render('posts.edit', { post })
   }
 
+  /*
+   ** Update post
+   */
   async update({ request, response, params, session }) {
     const { slug } = params
     const post = await Post.findBy('slug', slug)
@@ -62,6 +80,9 @@ class PostController {
     return response.redirect('/posts')
   }
 
+  /*
+   ** Delete post
+   */
   async destroy({ params, session, response }) {
     const { slug } = params
 
