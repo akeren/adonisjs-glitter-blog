@@ -38,6 +38,27 @@ class PostController {
 
     return response.redirect('/posts')
   }
+
+  async edit({ params, view }) {
+    const post = await Post.findBy('slug', params.slug)
+
+    return view.render('posts.edit', { post })
+  }
+
+  async update({ request, response, params, session }) {
+    const post = await Post.findBy('slug', params.slug)
+
+    post.title = request.input('title')
+    post.body = request.input('body')
+
+    if (!post.save()) {
+      session.flash({ notification: 'Unable to update post. Try again' })
+      return response.redirect('back')
+    }
+
+    session.flash({ notification: 'Post updated successfully.' })
+    return response.redirect('/posts')
+  }
 }
 
 module.exports = PostController
