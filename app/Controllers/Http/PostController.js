@@ -1,7 +1,6 @@
 'use strict'
 
 const Post = use('App/Models/Post')
-const { validate } = use('Validator')
 
 class PostController {
   async index({ view }) {
@@ -14,7 +13,8 @@ class PostController {
   }
 
   async show({ params, view }) {
-    const post = await Post.findBy('slug', params.slug)
+    const { slug } = params
+    const post = await Post.findBy('slug', slug)
 
     return view.render('posts.details', { post })
   }
@@ -40,24 +40,40 @@ class PostController {
   }
 
   async edit({ params, view }) {
+    const { slug } = params
     const post = await Post.findBy('slug', params.slug)
 
     return view.render('posts.edit', { post })
   }
 
   async update({ request, response, params, session }) {
-    const post = await Post.findBy('slug', params.slug)
+    const { slug } = params
+    const post = await Post.findBy('slug', slug)
 
     post.title = request.input('title')
     post.body = request.input('body')
 
-    if (!post.save()) {
+    if (!(await post.save())) {
       session.flash({ notification: 'Unable to update post. Try again' })
       return response.redirect('back')
     }
 
     session.flash({ notification: 'Post updated successfully.' })
     return response.redirect('/posts')
+  }
+
+  async destroy({ params, session, response }) {
+    const { slug } = params
+
+    const post = await Post.findBy('slug', slug)
+
+    if (!(await post.delete())) {
+      session.flash({ notification: 'Unable to delete post!' })
+      return response.redirect('back')
+    }
+
+    session.flash({ notification: 'Posted deleted successfully' })
+    response.redirect('/posts')
   }
 }
 

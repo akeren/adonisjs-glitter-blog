@@ -3,9 +3,18 @@
 @section('content')
 
   <a href="/posts">Go Back</a>
+  @if(old('notification'))
+    <div class="alert alert-danger">
+        {{ old('notification') }}
+    </div>
+  @endif
   <hr>
   <h1>{{ post.title }}</h1>
   <p>{{ post.body }}</p>
   <hr>
-<a href="/posts/edit/{{ post.slug }}" class="btn btn-dark d-block float-left">Edit</a>
+  <a href="/posts/edit/{{ post.slug }}" class="btn btn-dark d-block float-left">Edit</a>
+  <form action="{{ '/posts/' + post.slug + '?_method=DELETE' }}" method="POST" >
+    {{ csrfField() }}
+    <button class="btn btn-danger d-block float-right" type="submit">Delete</button>
+  </form>
 @endsection
