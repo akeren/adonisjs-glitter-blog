@@ -1,6 +1,7 @@
 'use strict'
 
 const Post = use('App/Models/Post')
+const { validate } = use('Validator')
 
 class PostController {
   async index({ view }) {
@@ -20,6 +21,22 @@ class PostController {
 
   async create({ view }) {
     return view.render('posts.create')
+  }
+
+  async store({ request, response, session }) {
+    const post = new Post()
+
+    post.title = request.input('title')
+    post.body = request.input('body')
+
+    if (!(await post.save())) {
+      session.flash({ notification: 'Unable to create post!' })
+      return response.redirect('back')
+    }
+
+    session.flash({ notification: 'Created post successfully!' })
+
+    return response.redirect('/posts')
   }
 }
 

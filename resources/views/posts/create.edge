@@ -4,15 +4,22 @@
     <a href="/posts" class="">Go Back</a>
     <hr>
     <h1>Create Post</h1>
+    @if(old('notification'))
+      <div class="alert alert-danger">
+          {{ old('notification') }}
+      </div>
+    @endif
     <form action="/posts" method="POST">
         {{ csrfField() }}
         <div class="form-group">
             <label for="title">Title:</label>
-            <input type="text" name="title" id="title" placeholder="Title" class="form-control">
+        <input type="text" name="title" id="title" placeholder="Title" value="{{ old('title', '') }}" class="form-control">
+            {{ elIf('<span class="text-danger">$self</span>', getErrorFor('title'), hasErrorFor('title')) }}
         </div>
         <div class="form-group">
             <label for="body">Content</label>
-            <textarea name="body" placeholder="Content" id="body" class="form-control"></textarea>
+        <textarea name="body" placeholder="Content" id="body" class="form-control">{{ old('body', '') }}</textarea>
+            {{ elIf('<span class="text-danger">$self</span>', getErrorFor('body'), hasErrorFor('body')) }}
         </div>
         <button class="btn btn-primary" type="submit">Submit</button>
     </form>
